@@ -1,1 +1,4 @@
-python
+functions-framework==3.*
+google-cloud-storage
+google-cloud-secret-manager
+mysql-connector-python
