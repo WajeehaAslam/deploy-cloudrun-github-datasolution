@@ -10,11 +10,15 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 8080 available to the world outside this container
+# Expose port 8080 for the Flask app to be accessible
 EXPOSE 8080
 
-# Define environment variable
-ENV NAME World
+# Set the environment variables for database connection
+ENV DB_USER=root
+ENV DB_PASSWORD=pass
+ENV DB_NAME=customer
+ENV SQL_HOST=34.46.80.109
 
-# Run app.py when the container launches
-CMD ["python", "datacode.py"]
+# Run the application
+CMD ["functions-framework", "--target=hello_http", "--port=8080"]
+
