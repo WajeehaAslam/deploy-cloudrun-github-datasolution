@@ -8,13 +8,11 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt || true
 
-# Define environment variables (optional, if needed by your application)
-ENV DATACODE_FILE=datacode.py
+# Define environment variables for file paths
+ENV INPUT_FILE=input.json
+ENV OUTPUT_FILE=output.json
 
-# Expose port 8080 for Cloud Run (not strictly necessary for Cloud Run)
-EXPOSE 8080
-
-# Run datacode.py when the container launches
-CMD ["python", "datacode.py"]
+# Run etl.py when the container launches
+CMD ["python", "etl.py"]
