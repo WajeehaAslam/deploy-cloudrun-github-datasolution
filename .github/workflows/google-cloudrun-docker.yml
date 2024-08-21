@@ -50,7 +50,7 @@ on:
 
 env:
   PROJECT_ID: sustained-drake-429210-k4 # TODO: update Google Cloud project id
-  GAR_NAME: gh-demo
+  GAR_NAME: git
   GAR_LOCATION: us-central1 # TODO: update Artifact Registry location
   SERVICE: datacode # TODO: update Cloud Run service name
   REGION: us-central1 # TODO: update Cloud Run service region
