@@ -10,11 +10,11 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Define environment variables
+# Define environment variables (optional, if needed by your application)
 ENV DATACODE_FILE=datacode.py
-ENV PORT=8080
+
+# Expose port 8080 for Cloud Run (not strictly necessary for Cloud Run)
+EXPOSE 8080
 
 # Run datacode.py when the container launches
 CMD ["python", "datacode.py"]
-
-
