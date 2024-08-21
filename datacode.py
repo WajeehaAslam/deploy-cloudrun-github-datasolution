@@ -4,7 +4,6 @@ import json
 import csv
 from google.cloud import storage
 import mysql.connector
-import tempfile
 
 # Initialize clients
 storage_client = storage.Client()
@@ -14,6 +13,10 @@ DB_USER = os.getenv('DB_USER', 'root')
 DB_PASSWORD = os.getenv('DB_PASSWORD', 'pass')
 DB_NAME = os.getenv('DB_NAME', 'customer')
 SQL_HOST = os.getenv('SQL_HOST', '34.46.80.109')
+
+# Retrieve PORT environment variable
+PORT = os.getenv('PORT', '8080')
+print(f"PORT is set to: {PORT}")
 
 def read_csv_from_gcs(bucket_name, file_name):
     bucket = storage_client.bucket(bucket_name)
@@ -65,4 +68,5 @@ def hello_http(request):
 
     except Exception as e:
         return f"Error: {str(e)}", 500
+
 
