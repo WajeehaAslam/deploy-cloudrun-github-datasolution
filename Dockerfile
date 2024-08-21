@@ -8,11 +8,16 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt || true
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Define environment variables for file paths
-ENV INPUT_FILE=input.json
-ENV OUTPUT_FILE=output.json
+# Install Google Cloud Functions Framework
+RUN pip install functions-framework google-cloud-storage mysql-connector-python
 
-# Run etl.py when the container launches
-CMD ["python", "etl.py"]
+# Expose port 8080 for Cloud Run
+EXPOSE 8080
+
+# Set environment variables
+ENV PORT=8080
+
+# Run the function when the container launches
+CMD ["functions-framework", "--target", "hello_http"]
