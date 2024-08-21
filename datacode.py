@@ -5,7 +5,7 @@ import csv
 from google.cloud import storage
 import mysql.connector
 
-# Initialize clients
+# Initialize client
 storage_client = storage.Client()
 
 # Set environment variables for Cloud SQL connection
