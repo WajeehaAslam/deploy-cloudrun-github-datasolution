@@ -1,9 +1,9 @@
+import os
 import functions_framework
 import json
 import csv
 from google.cloud import storage
 import mysql.connector
-import tempfile
 
 # Initialize clients
 storage_client = storage.Client()
@@ -12,7 +12,6 @@ storage_client = storage.Client()
 DB_USER = 'root'
 db_password = 'pass'
 DB_NAME = 'customer'
-# INSTANCE_CONNECTION_NAME = os.getenv('INSTANCE_CONNECTION_NAME')
 sql_host = '34.46.80.109'
 
 def read_csv_from_gcs(bucket_name, file_name):
@@ -33,20 +32,16 @@ def read_json_from_gcs(bucket_name, file_name):
     return json.loads(content)
 
 def read_from_cloud_sql():
-    # db_password = get_db_password()
-
     # Connect to the Cloud SQL instance
     cnx = mysql.connector.connect(
         user=DB_USER,
         password=db_password,
         database=DB_NAME,
         host=sql_host
-        # unix_socket=f'/cloudsql/{INSTANCE_CONNECTION_NAME}'
     )
 
     cursor = cnx.cursor(dictionary=True)
-    cursor.execute("select * from sample_table;")
-
+    cursor.execute("SELECT * FROM sample_table;")
     result = cursor.fetchall()
     cnx.close()
 
@@ -69,7 +64,7 @@ def hello_http(request):
         csv_data = read_csv_from_gcs(bucket_name, 'data.csv')
         json_data = read_json_from_gcs(bucket_name, 'json.JSON')
         
-        # # Fetch data from Cloud SQL
+        # Fetch data from Cloud SQL
         sql_data = read_from_cloud_sql()
 
         # Combine all data into a JSON structure
@@ -79,14 +74,19 @@ def hello_http(request):
             "sql_data": sql_data
         }
 
-        # # Upload combined data as JSON to GCS
+        # Upload combined data as JSON to GCS
         upload_json_to_gcs(bucket_name, 'output-file.json', combined_data)
 
         return "Data combined and uploaded successfully."
-        # , sql_data
 
     except Exception as e:
         return f"Error: {str(e)}", 500
+
+if __name__ == "__main__":
+    # Ensure the application listens on the correct port
+    port = int(os.environ.get("PORT", 8080))
+    functions_framework.run("hello_http", port=port)
+
 
 
 
