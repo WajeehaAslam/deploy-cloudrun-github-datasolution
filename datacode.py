@@ -46,6 +46,12 @@ def read_from_cloud_sql():
     cursor.execute("SELECT * FROM sample_table;")
     result = cursor.fetchall()
     cnx.close()
+    
+    # Convert datetime objects to strings
+    for row in result:
+        for key, value in row.items():
+            if isinstance(value, datetime):
+                row[key] = value.isoformat()
 
     return result
 
