@@ -1,9 +1,11 @@
-import os
-import functions_framework
+from flask import Flask, jsonify
 import json
 import csv
 from google.cloud import storage
 import mysql.connector
+import os
+
+app = Flask(__name__)
 
 # Initialize clients
 storage_client = storage.Client()
@@ -54,8 +56,8 @@ def upload_json_to_gcs(bucket_name, file_name, data):
     # Convert data to JSON string and upload to GCS
     blob.upload_from_string(json.dumps(data), content_type='application/json')
 
-@functions_framework.http
-def hello_http(request):
+@app.route('/')
+def hello():
     try:
         # Get the bucket name from environment variable or request
         bucket_name = 'customers_products_prices'
@@ -77,15 +79,15 @@ def hello_http(request):
         # Upload combined data as JSON to GCS
         upload_json_to_gcs(bucket_name, 'output-file.json', combined_data)
 
-        return "Data combined and uploaded successfully."
+        return jsonify({"message": "Data combined and uploaded successfully."})
 
     except Exception as e:
-        return f"Error: {str(e)}", 500
+        return jsonify({"error": str(e)}), 500
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     # Ensure the application listens on the correct port
     port = int(os.environ.get("PORT", 8080))
-    functions_framework.run("hello_http", port=port)
+    app.run(host='0.0.0.0', port=port)
 
 
 
